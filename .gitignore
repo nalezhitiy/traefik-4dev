@@ -1,0 +1,69 @@
+# -------------------------------------------------------------------
+# System Files (OS-specific clutter)
+# -------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------------------------------------------------
+# IDEs and Editors (Personal workspace settings)
+# -------------------------------------------------------------------
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# -------------------------------------------------------------------
+# Environment Variables & Secrets (NEVER commit these)
+# -------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# -------------------------------------------------------------------
+# Language/Framework Specific (Choose what applies to your stack)
+# -------------------------------------------------------------------
+
+# Node.js (JavaScript/TypeScript)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dist/
+build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+
+# Java / Maven / Gradle
+target/
+!.mvn/wrapper/maven-wrapper.jar
+build/
+.gradle/
+
+# C / C++
+*.o
+*.obj
+*.out
+*.exe
+
