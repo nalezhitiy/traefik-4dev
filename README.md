@@ -1,6 +1,32 @@
 # traefik-4dev
 
+A local development infrastructure for running full-stack services under custom domains with automatic routing, DNS resolution, and trusted HTTPS certificates.
+
+This project provides a reproducible local environment using Docker Compose, Traefik, dnsmasq, and mkcert to simulate production-like routing on custom domains (e.g. dev.test, api.dev.test, dashboard.dev.test) directly on localhost.
+
+It automatically handles:
+
+Local DNS resolution for wildcard domains
+HTTPS with locally trusted certificates (mkcert)
+Dynamic service routing via Traefik
+Multi-service development environments (API, dashboards, tools, databases)
+
+Designed for teams who want a production-like infrastructure locally without external dependencies.
+
+## Quick start
+```
+cp .env.example .env
+make build
+make start
+make check
+```
+Then open:
+```
+https://dev.test
+```
+---
 Локальна платформа для розробки на базі Traefik, Docker, dnsmasq та mkcert.
+
 
 Основні можливості:
 
