@@ -1,0 +1,61 @@
+services:
+
+  traefik:
+    image: traefik:3.7
+    restart: unless-stopped
+    
+    command:
+      - --api.dashboard=true
+
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=traefik-4dev_network
+
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.http.tls=true
+
+      - --providers.file.directory=/etc/traefik/dynamic
+      - --providers.file.watch=true
+    
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/traefik/dynamic:/etc/traefik/dynamic:ro
+      - traefik-4dev_certs:/certs:ro
+
+    networks:
+      - traefik-4dev_network
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dashboard.rule=Host(`${BASE_DOMAIN}`)
+      - traefik.http.routers.dashboard.entrypoints=websecure
+      - traefik.http.routers.dashboard.service=api@internal
+      - traefik.http.routers.dashboard.tls=true
+
+
+  dns:
+    build: ./dns
+    restart: unless-stopped
+
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+
+    networks:
+      - traefik-4dev_network
+
+
+networks:
+  traefik-4dev_network:
+    name: traefik-4dev_network
+    driver: bridge
+
+
+volumes:
+  traefik-4dev_certs:
+    name: traefik-4dev_certs

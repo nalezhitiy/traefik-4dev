@@ -67,3 +67,5 @@ build/
 *.out
 *.exe
 
+
+data/certs/*.pem
