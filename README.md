@@ -99,9 +99,22 @@ BASE_DOMAIN=dev.test
 ```env
 BASE_DOMAIN=dev.test
 BASE_DOMAIN=dev.loc
+BASE_DOMAIN=dev.com - навіть з реальної доменої зони
 BASE_DOMAIN=my-project.test
 BASE_DOMAIN=company.test
 ```
+
+## Права доступу (IMPORTANT)
+
+Деякі команди платформи виконують системні операції і потребують `root-прав (sudo)`.
+
+Зокрема:
+
+- додавання loopback IP для Traefik (`traefik-ip-install`)
+- налаштування локального DNS resolver (`resolver-install`)
+- видалення системних налаштувань (`clean, resolver-remove, traefik-ip-remove`)
+
+При першому запуску система може запросити пароль адміністратора.
 
 ### 3. Зібрати платформу
 

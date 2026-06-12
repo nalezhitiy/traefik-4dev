@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     
     command:
+      - --log.level=DEBUG
       - --api.dashboard=true
 
       - --providers.docker=true
@@ -18,9 +19,13 @@ services:
       - --providers.file.directory=/etc/traefik/dynamic
       - --providers.file.watch=true
     
+    # ports:
+    #   - "80:80"
+    #   - "443:443"
+
     ports:
-      - "80:80"
-      - "443:443"
+      - "${TRAEFIK_IP}:80:80"
+      - "${TRAEFIK_IP}:443:443"
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -28,7 +33,8 @@ services:
       - traefik-4dev_certs:/certs:ro
 
     networks:
-      - traefik-4dev_network
+      traefik-4dev_network:
+        ipv4_address: ${TRAEFIK_IP}
 
     labels:
       - traefik.enable=true
@@ -41,21 +47,29 @@ services:
   dns:
     build: ./dns
     restart: unless-stopped
+    environment:
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      DESTINATION_IP: ${TRAEFIK_IP}
 
     ports:
       - "53:53/udp"
       - "53:53/tcp"
 
     networks:
-      - traefik-4dev_network
+      traefik-4dev_network:
+        ipv4_address: ${DNS_IP}
 
 
 networks:
   traefik-4dev_network:
     name: traefik-4dev_network
     driver: bridge
+    ipam:
+      config:
+        - subnet: ${SUBNET_IP}/24
 
 
 volumes:
   traefik-4dev_certs:
     name: traefik-4dev_certs
+    external: true
