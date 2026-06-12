@@ -384,7 +384,51 @@ networks:
     external: true
 ```
 
----
+# SSL certificates for local development (Traefik + Docker)
+
+Для локального HTTPS через Traefik використовується Root CA, згенерований через mkcert.
+
+### 1. Volume з сертифікатами
+```yaml
+volumes:
+  traefik-4dev_certs:
+    external: true
+```
+### 2. Підключення до сервісу
+```yaml
+services:
+  app:
+    volumes:
+      - traefik-4dev_certs:/certs:ro
+```
+### 3. Варіант A — образ підтримує update-ca-certificates
+```yaml
+entrypoint:
+  - /bin/sh
+  - -c
+  - |
+    cp /certs/rootCA.pem /usr/local/share/ca-certificates/dev-ca.crt &&
+    update-ca-certificates &&
+    exec "$$@"
+  "
+```
+### 4. Варіант B — якщо потрібен власний Dockerfile (Alpine)
+```txt
+FROM alpine:latest AS net-test
+
+RUN apk add --no-cache \
+    ca-certificates \
+    curl \
+    bind-tools \
+    iputils \
+    openssl \
+    bash \
+    nano && \
+    update-ca-certificates
+
+ENTRYPOINT ["/bin/sh", "-c", "cp /certs/rootCA.pem /usr/local/share/ca-certificates/dev-ca.crt && update-ca-certificates && exec sh"]
+```
+
 
 # Основні команди
 
