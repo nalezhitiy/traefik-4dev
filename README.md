@@ -50,7 +50,7 @@ https://dev.test
 * Debian
 * Linux дистрибутиви з Docker Engine
 
-Windows офіційно не підтримується.
+Windows не підтримується.
 
 ## Docker
 
@@ -158,17 +158,51 @@ NET::ERR_CERT_AUTHORITY_INVALID
 ```bash
 make start
 ```
+Перевірка налаштувань
+```bash
+make check
+```
 
 ### 6. Відкрити браузер
 
 ```text
 https://${BASE_DOMAIN}
 ```
+Відкриється дашборд traefik
 
 Наприклад:
 
 ```text
 https://dev.test
+```
+---
+
+### 6. Makefile
+
+Побачити список команд , просто виконати команду:
+```sh
+$ make
+// or 
+$ make help
+```
+```sh
+Available targets:
+ build:                         Full build (entry point)
+ images:                        Build docker images
+ volume:                        Create certificate volume
+ certs:                         Generate TLS certificates (mkcert in container)
+ export-ca:                     Export root CA to host (browser trust)
+ resolver-install:              create local resolver for BASE_DOMAIN
+ resolver-remove:               remove local resolver for BASE_DOMAIN
+ check:                         check dns + endpoint
+ traefik-ip-install:            add traefik loopback ip
+ traefik-ip-remove:             remove traefik loopback ip
+ start:                         start platform
+ stop:                          stop platform
+ restart:                       restart platform
+ logs:                          logs
+ clean:                         clean everything
+ help:                          Help
 ```
 
 ---
@@ -197,7 +231,7 @@ Resolver ОС
 dnsmasq
     │
     ▼
-127.0.0.1
+172.20.100.10
     │
     ▼
 Traefik
@@ -245,8 +279,9 @@ nameserver 127.0.0.1
 Конфігурація:
 
 ```conf
-address=/.dev.test/127.0.0.1
+address=/.${BASE_DOMAIN}/${DESTINATION_IP}
 ```
+env передається через docker compose service
 
 Усі домени:
 
@@ -260,7 +295,7 @@ dashboard.dev.test
 резолвляться в:
 
 ```text
-127.0.0.1
+TRAEFIK_IP
 ```
 
 ---
@@ -329,7 +364,7 @@ services:
 
       - traefik.http.routers.api.rule=Host(`api.dev.test`)
       - traefik.http.routers.api.entrypoints=websecure
-
+     # Порт на якому запущений сервіс
       - traefik.http.services.api.loadbalancer.server.port=8080
 
     networks:
