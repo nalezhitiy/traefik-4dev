@@ -2,7 +2,6 @@ services:
 
   traefik:
     image: traefik:3.7
-    restart: unless-stopped
     
     command:
       - --log.level=DEBUG
@@ -18,10 +17,6 @@ services:
 
       - --providers.file.directory=/etc/traefik/dynamic
       - --providers.file.watch=true
-    
-    # ports:
-    #   - "80:80"
-    #   - "443:443"
 
     ports:
       - "${TRAEFIK_IP}:80:80"
@@ -46,7 +41,6 @@ services:
 
   dns:
     build: ./dns
-    restart: unless-stopped
     environment:
       BASE_DOMAIN: ${BASE_DOMAIN}
       DESTINATION_IP: ${TRAEFIK_IP}
